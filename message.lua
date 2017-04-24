@@ -1,6 +1,6 @@
 return function (data)
 --    print(data)
-    local msg = cjson.decode(data)    
+    local msg = sjson.decode(data)    
     disp:firstPage()
     repeat
          disp:setFont(u8g[msg.time.font])

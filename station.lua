@@ -8,12 +8,12 @@ function arr2str(arr)
 end
 
 function connect ()
-    mqtt:connect('home.nayg.ru', 8883, 1, function(conn)
+    mqtt:connect('192.168.90.172', 1883, 0, function(conn)
         mqtt:subscribe('oled/events/+',0)
         tmr.stop(1) -- stop connecting
         tmr.stop(3) -- stop splash
         print ("Connected") 
-        mqtt:publish('oled/status/'..node.chipid(),cjson.encode({status = 'online'}),0,0)
+        mqtt:publish('oled/status/'..node.chipid(),sjson.encode({status = 'online'}),0,0)
         
     end)
 end
@@ -22,7 +22,7 @@ end
 
 mqtt = mqtt.Client(node.chipid(), 120)
 
-mqtt:lwt('oled/status/'..node.chipid(), cjson.encode({status = 'offline'}), 0, 0)
+mqtt:lwt('oled/status/'..node.chipid(), sjson.encode({status = 'offline'}), 0, 0)
 
 mqtt:on('offline', function(con) 
                     tmr.alarm(1, 1000, tmr.ALARM_AUTO, function()

@@ -1,4 +1,5 @@
 function dolc(fileName, ...)
+    print("Executing ", fileName)
     if  file.open(fileName .. '.lua') then
         file.close()
         print('Compiling:', fileName .. '.lua')
