@@ -1,5 +1,9 @@
 wifi.setmode(wifi.STATION)
-wifi.sta.config("o3-prod", "mwwemzu7")
+file.open("wificonfig.json","r")
+wificonfig = sjson.decode(file.read())
+file.close()
+wifi.sta.clearconfig()
+wifi.sta.config(wificonfig.ssid, wificonfig.pwd)
 wifi.sta.autoconnect(1)
 wifi.sta.connect()
-
+print(wificonfig.ssid, wificonfig.pwd)

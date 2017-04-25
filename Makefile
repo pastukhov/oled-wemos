@@ -30,3 +30,5 @@ restart:
 
 terminal:
 	@$(NODEMCU-UPLOADER) -p $(PORT) terminal
+flash:
+	esptool.py --port /dev/ttyUSB0 write_flash -fm dio -fs 32m 0x00000 nodemcu-dev-13-modules-2017-04-24-09-58-48-integer.bin

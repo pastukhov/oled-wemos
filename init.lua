@@ -1,5 +1,5 @@
 function dolc(fileName, ...)
-    print("Executing ", fileName)
+    if debug then print("Executing ", fileName) end
     if  file.open(fileName .. '.lua') then
         file.close()
         print('Compiling:', fileName .. '.lua')
@@ -19,6 +19,8 @@ function dolc(fileName, ...)
     end
     collectgarbage()
 end
+
+debug = false
 
 dolc('initDisplay')
 --dolc('initTime')
