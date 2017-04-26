@@ -21,7 +21,7 @@ function dolc(fileName, ...)
 end
 
 debug = false
-
+dolc('readConfig')
 dolc('initDisplay')
 --dolc('initTime')
 --dolc('setLocale')

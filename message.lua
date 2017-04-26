@@ -21,10 +21,18 @@ return function (data)
                 disp:drawLine( maxX/2, maxY/4,maxX,maxY/4)
                 disp:drawLine( 0, maxY/2 + maxY/4,maxX,maxY/4 + maxY/2)
             elseif string.type == "text" then 
-                disp:setFont(u8g[string.font])
-                disp:drawStr(string.x,string.y,string.text)
+                if string.font and string.x and string.y and string.text then
+                    disp:setFont(u8g[string.font])
+                    disp:drawStr(string.x,string.y,string.text)
+                else
+                    print("Error, input data is incomplete",string.x,string.y,string.text,string.font)
+                end
             elseif string.type == "image" then
-                disp:drawXBM(string.x, string.y, string.w, string.h, arr2str(string.image.data))
+                if string.x and string.y and string.w and string.h and string.image.data then
+                    disp:drawXBM(string.x, string.y, string.w, string.h, arr2str(string.image.data))
+                else
+                    print("Error, input data is incomplete",string.x, string.y, string.w, string.h, sjson.encode(string.image.data))
+                end
             end
         end 
 

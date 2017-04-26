@@ -8,7 +8,7 @@ function arr2str(arr)
 end
 
 function connect ()
-    mqtt:connect('192.168.90.172', 1883, 0, function(conn)
+    mqtt:connect(config.broker, config.port, config.tls, function(conn)
         mqtt:subscribe('oled/events/+',0)
         tmr.stop(1) -- stop connecting
         tmr.stop(3) -- stop splash
@@ -20,7 +20,7 @@ end
 
 
 
-mqtt = mqtt.Client(node.chipid(), 120)
+mqtt = mqtt.Client(node.chipid(), 120, config.mqttlogin, config.mqttpassword)
 
 mqtt:lwt('oled/status/'..node.chipid(), sjson.encode({status = 'offline'}), 0, 0)
 

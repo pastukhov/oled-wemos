@@ -1,13 +1,10 @@
 wifi.setmode(wifi.STATION)
-if file.exists("wificonfig.json") then
-    file.open("wificonfig.json","r")
-    wificonfig = sjson.decode(file.read())
-    file.close()
+if config then
     wifi.sta.clearconfig()
-    wifi.sta.config(wificonfig.ssid, wificonfig.pwd)
+    wifi.sta.config(config.ssid, config.pwd)
     wifi.sta.autoconnect(1)
     wifi.sta.connect()
---    print(wificonfig.ssid, wificonfig.pwd)
+    print(config.ssid, config.pwd)
 else
-    
+    print("Upload config.json!")
 end
