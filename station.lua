@@ -36,9 +36,11 @@ mqtt:on("message", function(conn, topic, data)
 --    tmr.stop(1)
     local start = tmr.now()
             if topic:match('message$') then
-                dolc('message',data)
-            elseif topic:match('image$') then
-                dolc('image',data)
+--                dolc('message',data)
+                if debug then print("data",data) end
+                dofile("message.lua")(data)
+--            elseif topic:match('image$') then
+--                dolc('image',data)
             end
 
 --    print(node.heap(),'bytes',tmr.now() - start, 'miliseconds', topic)

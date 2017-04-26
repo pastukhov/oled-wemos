@@ -27,6 +27,7 @@ dolc('initDisplay')
 --dolc('setLocale')
 dolc('displaySplash')
 dolc('configNetSmart')
-dolc('station')
+--dolc('station')
+dofile('station.lua')
 
 
