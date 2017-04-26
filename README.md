@@ -58,12 +58,12 @@
 
 ## Отправляем информацию
 Информацию можно отправить любым удобным для нас способом. Я использовал [Node-RED](nodered.org)
-Код для него доступен [в этом репозитории](https://github.com/pastukhov/oled-wemos/blob/master/node-red_flows.json). Не забудьте подкорректировать пути, по кторым у вас лежат иконки.
+Код для него доступен [в этом репозитории](https://github.com/pastukhov/oled-wemos/blob/master/node-red_flows.json). Не забудьте подкорректировать пути, по которым у вас лежат иконки.
 
 ## Демонстрационное видео
 
 [![Загрузка](https://img.youtube.com/vi/qxMWe75K9kE/0.jpg)](https://www.youtube.com/watch?v=qxMWe75K9kE)
 
-##TODO
+## TODO
 * Собрать в корпусе
 
