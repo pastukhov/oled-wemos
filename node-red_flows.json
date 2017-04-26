@@ -1,0 +1,286 @@
+[
+    {
+        "id": "e77c5d51.92d62",
+        "type": "inject",
+        "z": "6686d4ec.3bf4cc",
+        "name": "every second",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "x": 140,
+        "y": 280,
+        "wires": [
+            [
+                "1a04c8e4.377837"
+            ]
+        ]
+    },
+    {
+        "id": "1a04c8e4.377837",
+        "type": "function",
+        "z": "6686d4ec.3bf4cc",
+        "name": "Construct screen layout",
+        "func": "function addZero(i) {\n    if (i < 10) {\n        i = \"0\" + i;\n    }\n    return i;\n}\n\nvar d = new Date();\nvar h = addZero(d.getHours());\nvar m = addZero(d.getMinutes());\nvar s = addZero(d.getSeconds());\n\nmsg.payload = [\n    {   \n        \"text\"  :   h + \":\" + m + \":\" + s,\n        \"x\"     :   0,\n        \"y\"     :   11,\n        \"type\"  :   \"text\",\n        \"font\"  :   \"font_unifont_0_8\"\n    },\n    {\n        \"text\"  :   global.get(\"temperature\"),\n        \"x\"     :   2,\n        \"y\"     :   29,\n        \"font\"  :   \"font_unifont_0_8\",\n        \"type\"  :   \"text\"\n    },\n    {\n        \"text\"  :   global.get(\"forecast\"),\n        \"x\"     :   2,\n        \"y\"     :   47,\n        \"type\"  :   \"text\",\n        \"font\"  :   \"font_unifont_0_8\"},\n    {\n        \"type\"  :   \"image\",\n        \"image\" :   global.get(\"weathericon\"),\n        \"x\"     :   40,\n        \"y\"     :   11,\n        \"w\"     :   24,\n        \"h\"     :   24\n    },\n\n//    {\n//        \"type\"  :   \"gird\"\n//    }\n];\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 350,
+        "y": 280,
+        "wires": [
+            [
+                "551a63be.61a08c",
+                "15a46add.9ccda5"
+            ]
+        ]
+    },
+    {
+        "id": "551a63be.61a08c",
+        "type": "mqtt out",
+        "z": "6686d4ec.3bf4cc",
+        "name": "",
+        "topic": "oled/events/message",
+        "qos": "",
+        "retain": "false",
+        "broker": "8f2940d6.4bfb2",
+        "x": 780,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "92ca4a50.186908",
+        "type": "function",
+        "z": "6686d4ec.3bf4cc",
+        "name": "set global variable forecast",
+        "func": "global.set(\"forecast\",Math.round(msg.payload.temp_minc) + \" \" + Math.round(msg.payload.temp_maxc)+ \" C\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 800,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fdd78b93.600588",
+        "type": "inject",
+        "z": "6686d4ec.3bf4cc",
+        "name": "every 30 minutes",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "1800",
+        "crontab": "",
+        "once": true,
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "df1792d5.41244"
+            ]
+        ]
+    },
+    {
+        "id": "df1792d5.41244",
+        "type": "function",
+        "z": "6686d4ec.3bf4cc",
+        "name": "weather request",
+        "func": "msg.location = {\n    city    :   \"Moscow\",\n    country :   \"Russia\"\n//    lat :   55.4507,\n//    lon :   37.3656\n    \n};\n//msg.time = Date.now();\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 320,
+        "y": 100,
+        "wires": [
+            [
+                "7da21b1.969d2e4"
+            ]
+        ]
+    },
+    {
+        "id": "1706bb47.f44155",
+        "type": "debug",
+        "z": "6686d4ec.3bf4cc",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "true",
+        "x": 730,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "31b60ebe.e09b82",
+        "type": "function",
+        "z": "6686d4ec.3bf4cc",
+        "name": "set global variable temperature",
+        "func": "global.set(\"temperature\",Math.round(msg.payload.tempc)+ \" C\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 810,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7da21b1.969d2e4",
+        "type": "openweathermap",
+        "z": "6686d4ec.3bf4cc",
+        "name": "",
+        "wtype": "current",
+        "lon": "",
+        "lat": "",
+        "city": "",
+        "country": "",
+        "language": "ru",
+        "x": 530,
+        "y": 100,
+        "wires": [
+            [
+                "1706bb47.f44155",
+                "31b60ebe.e09b82",
+                "92ca4a50.186908",
+                "6c345ba.732e4a4"
+            ]
+        ]
+    },
+    {
+        "id": "308a9328.1b0bfc",
+        "type": "file in",
+        "z": "6686d4ec.3bf4cc",
+        "name": "Read icon",
+        "filename": "/some/path/to/icons/wi_alien.mono",
+        "format": "",
+        "x": 300,
+        "y": 340,
+        "wires": [
+            [
+                "8162dcd6.41c86"
+            ]
+        ]
+    },
+    {
+        "id": "8162dcd6.41c86",
+        "type": "function",
+        "z": "6686d4ec.3bf4cc",
+        "name": "Test image",
+        "func": "var msg2 = {};\nmsg2.payload = [\n    {\n        \"type\"  :   \"image\",\n        \"image\" :   msg.payload,\n        \"x\"     :   0,\n        \"y\"     :   0,\n        \"w\"     :   32,\n        \"h\"     :   32\n    }\n];\n\nreturn msg2;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 490,
+        "y": 340,
+        "wires": [
+            [
+                "551a63be.61a08c"
+            ]
+        ]
+    },
+    {
+        "id": "f8b05f7e.f5c0e",
+        "type": "inject",
+        "z": "6686d4ec.3bf4cc",
+        "name": "Display image",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 130,
+        "y": 340,
+        "wires": [
+            [
+                "308a9328.1b0bfc"
+            ]
+        ]
+    },
+    {
+        "id": "6c345ba.732e4a4",
+        "type": "function",
+        "z": "6686d4ec.3bf4cc",
+        "name": "get weather icon name",
+        "func": "var weathericons = [];\nweathericons[200] = \"storm-showers\";\nweathericons[201] = \"storm-showers\";\nweathericons[202] = \"storm-showers\";\nweathericons[210] = \"storm-showers\";\nweathericons[211] = \"thunderstorm\";\nweathericons[212] = \"thunderstorm\";\nweathericons[221] = \"thunderstorm\";\nweathericons[230] = \"storm-showers\";\nweathericons[231] = \"storm-showers\";\nweathericons[232] = \"storm-showers\";\nweathericons[300] = \"sprinkle\";\nweathericons[301] = \"sprinkle\";\nweathericons[302] = \"sprinkle\";\nweathericons[310] = \"sprinkle\";\nweathericons[311] = \"sprinkle\";\nweathericons[312] = \"sprinkle\";\nweathericons[313] = \"sprinkle\";\nweathericons[314] = \"sprinkle\";\nweathericons[321] = \"sprinkle\";\nweathericons[500] = \"rain\";\nweathericons[501] = \"rain\";\nweathericons[502] = \"rain\";\nweathericons[503] = \"rain\";\nweathericons[504] = \"rain\";\nweathericons[511] = \"rain-mix\";\nweathericons[520] = \"showers\";\nweathericons[521] = \"showers\";\nweathericons[522] = \"showers\";\nweathericons[531] = \"showers\";\nweathericons[600] = \"snow\";\nweathericons[601] = \"snow\";\nweathericons[602] = \"snow\";\nweathericons[611] = \"sleet\";\nweathericons[612] = \"sleet\";\nweathericons[615] = \"rain-mix\";\nweathericons[616] = \"rain-mix\";\nweathericons[620] = \"rain-mix\";\nweathericons[621] = \"rain-mix\";\nweathericons[622] = \"rain-mix\";\nweathericons[701] = \"sprinkle\";\nweathericons[711] = \"smoke\";\nweathericons[721] = \"day-haze\";\nweathericons[731] = \"cloudy-gusts\";\nweathericons[741] = \"fog\";\nweathericons[751] = \"cloudy-gusts\";\nweathericons[761] = \"dust\";\nweathericons[762] = \"smog\";\nweathericons[771] = \"day-windy\";\nweathericons[781] = \"tornado\";\nweathericons[800] = \"sunny\";\nweathericons[801] = \"cloudy\";\nweathericons[802] = \"cloudy\";\nweathericons[803] = \"cloudy\";\nweathericons[804] = \"cloudy\";\nweathericons[900] = \"tornado\";\nweathericons[901] = \"hurricane\";\nweathericons[902] = \"hurricane\";\nweathericons[903] = \"snowflake-cold\";\nweathericons[904] = \"hot\";\nweathericons[905] = \"windy\";\nweathericons[906] = \"hail\";\nweathericons[951] = \"sunny\";\nweathericons[952] = \"cloudy-gusts\";\nweathericons[953] = \"cloudy-gusts\";\nweathericons[954] = \"cloudy-gusts\";\nweathericons[955] = \"cloudy-gusts\";\nweathericons[956] = \"cloudy-gusts\";\nweathericons[957] = \"cloudy-gusts\";\nweathericons[958] = \"cloudy-gusts\";\nweathericons[959] = \"cloudy-gusts\";\nweathericons[960] = \"thunderstorm\";\nweathericons[961] = \"thunderstorm\";\nweathericons[962] = \"cloudy-gusts\";\nvar iconid = msg.data.weather[0].id;\nmsg.filename = '/some/path/to/icons/mono24/wi_wu_' + weathericons[iconid] + '.mono';\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 780,
+        "y": 40,
+        "wires": [
+            [
+                "79f5c80.3d72138"
+            ]
+        ]
+    },
+    {
+        "id": "79f5c80.3d72138",
+        "type": "file in",
+        "z": "6686d4ec.3bf4cc",
+        "name": "",
+        "filename": "",
+        "format": "",
+        "x": 950,
+        "y": 40,
+        "wires": [
+            [
+                "930e8e0a.da00a"
+            ]
+        ]
+    },
+    {
+        "id": "930e8e0a.da00a",
+        "type": "function",
+        "z": "6686d4ec.3bf4cc",
+        "name": "set global variable weathericon",
+        "func": "global.set(\"weathericon\",msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1150,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "31a14008.a9eb7",
+        "type": "debug",
+        "z": "6686d4ec.3bf4cc",
+        "name": "Dump message",
+        "active": false,
+        "console": "false",
+        "complete": "payload",
+        "x": 900,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "15a46add.9ccda5",
+        "type": "json",
+        "z": "6686d4ec.3bf4cc",
+        "name": "",
+        "x": 730,
+        "y": 220,
+        "wires": [
+            [
+                "31a14008.a9eb7"
+            ]
+        ]
+    },
+    {
+        "id": "8f2940d6.4bfb2",
+        "type": "mqtt-broker",
+        "z": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": ""
+    }
+]
