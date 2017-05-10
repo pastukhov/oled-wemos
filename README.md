@@ -11,7 +11,7 @@
 Воспользовавшись паяльником, собираем наш убердевайс ![В сборе](https://github.com/pastukhov/oled-wemos/raw/master/images/Device_front.jpg) Проследите, чтобы платы не соприкасались ![Вид сбоку](https://github.com/pastukhov/oled-wemos/raw/master/images/Device_side.jpg)
 
 ## Прошиваем наше устройство
-Идем на сайт [NodeMCU custom builds](https://nodemcu-build.com/) выбираем там ветку dev (мы же хотим использовать последние фичи). Выбираем там необходимые модули. Нам понадобятся: ``` file,i2c,mqtt,net,node,sjson,tmr,u8g,uart,wifi,tls ```. Выбираем драйвер дисплея, в нашем случае это ``` ssd1306_64x48_i2c ``` и шрифты по вкусу, кириллические символы находятся в ``` font_unifont_0_8 ```. Через некоторое время на почту приходит письмо с ссылкой на скомпилированную прошивку. Если вам лень этим заниматься можете взять [уже собранную](https://github.com/pastukhov/oled-wemos/raw/master/nodemcu-dev-13-modules-2017-04-24-09-58-48-integer.bin). Заливаем ее с помощью esptool: ``` esptool.py --port /dev/ttyUSB0 write_flash -fm dio -fs 32m 0x00000 ```. Наш девайс готов к программированию на lua.
+Идем на сайт [NodeMCU custom builds](https://nodemcu-build.com/) выбираем там ветку dev (мы же хотим использовать последние фичи). Выбираем там необходимые модули. Нам понадобятся: ``` file,i2c,mqtt,net,node,sjson,tmr,u8g,uart,wifi,tls ```. Выбираем драйвер дисплея, в нашем случае это ``` ssd1306_64x48_i2c ``` и шрифты по вкусу, кириллические символы находятся в ``` font_unifont_0_8 ```. Через некоторое время на почту приходит письмо с ссылкой на скомпилированную прошивку. Если вам лень этим заниматься можете взять [уже собранную](https://github.com/pastukhov/oled-wemos/raw/master/nodemcu-dev-13-modules-2017-04-24-09-58-48-integer.bin). Заливаем ее с помощью esptool: ``` esptool.py --port /dev/ttyUSB0 write_flash -fm dio -fs 32m 0x00000 nodemcu-dev-13-modules-2017-04-24-09-58-48-integer.bin```. Наш девайс готов к программированию на lua.
 
 ## Заливаем код
 С помощью приложенного Makefile или любым другим способом загружаем код из репозитория в устройство. В файле config.json определяем настройки для нашей беспроводной сети и MQTT брокера. Так же загружаем его. 
@@ -58,9 +58,12 @@
 
 ## Отправляем информацию
 Информацию можно отправить любым удобным для нас способом. Я использовал [Node-RED](nodered.org)
-Код для него доступен [в этом репозитории](https://github.com/pastukhov/oled-wemos/blob/master/node-red_flows.json). Не забудьте подкорректировать пути, по кторым у вас лежат иконки.
+Код для него доступен [в этом репозитории](https://github.com/pastukhov/oled-wemos/blob/master/node-red_flows.json). Не забудьте подкорректировать пути, по которым у вас лежат иконки.
 
 ## Демонстрационное видео
 
 [![Загрузка](https://img.youtube.com/vi/qxMWe75K9kE/0.jpg)](https://www.youtube.com/watch?v=qxMWe75K9kE)
+
+## TODO
+* Собрать в корпусе
 
