@@ -1,12 +1,4 @@
 
-function arr2str(arr)
-    local result = {}
-    for k,v in pairs(arr) do
-        result[k] = string.char(v) 
-    end
-    return table.concat(result)
-end
-
 function connect ()
     mqtt:connect(config.broker, config.port, config.tls, function(conn)
         mqtt:subscribe('oled/events/+',0)

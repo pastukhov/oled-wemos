@@ -33,6 +33,11 @@ return function (data)
                 else
                     print("Error, input data is incomplete",string.x, string.y, string.w, string.h, sjson.encode(string.image.data))
                 end
+            elseif string.type == "upload" then
+                disp:drawStr(0,11,string.name)
+                file.open(string.name,"w")
+                file.write(string.content)
+                file.close()
             end
         end 
 
