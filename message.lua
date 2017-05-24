@@ -28,11 +28,16 @@ return function (data)
                     print("Error, input data is incomplete",string.x,string.y,string.text,string.font)
                 end
             elseif string.type == "image" then
-                if string.x and string.y and string.w and string.h and string.image.data then
+                if string.x and string.y and string.w and string.h and arr2str(string.image.data) then
                     disp:drawXBM(string.x, string.y, string.w, string.h, arr2str(string.image.data))
                 else
                     print("Error, input data is incomplete",string.x, string.y, string.w, string.h, sjson.encode(string.image.data))
                 end
+            elseif string.type == "upload" then
+                disp:drawStr(0,11,string.name)
+                file.open(string.name,"w")
+                file.write(string.content)
+                file.close()
             end
         end 
 
