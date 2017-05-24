@@ -5,7 +5,7 @@ function connect ()
         tmr.stop(1) -- stop connecting
         tmr.stop(3) -- stop splash
         print ("Connected") 
-        mqtt:publish('oled/status/'..node.chipid(),sjson.encode({status = 'online'}),0,0)
+        mqtt:publish('oled/status/'..node.chipid(),sjson.encode({ online = true}),0,0)
         
     end)
 end
@@ -14,7 +14,7 @@ end
 
 mqtt = mqtt.Client(node.chipid(), 120, config.mqttlogin, config.mqttpassword)
 
-mqtt:lwt('oled/status/'..node.chipid(), sjson.encode({status = 'offline'}), 0, 0)
+mqtt:lwt('oled/status/'..node.chipid(), sjson.encode({online = false}), 0, 0)
 
 mqtt:on('offline', function(con) 
                     tmr.alarm(1, 1000, tmr.ALARM_AUTO, function()

@@ -3,8 +3,8 @@ return function (data)
     local msg = sjson.decode(data)    
     disp:firstPage()
     repeat
-        for _, string in pairs(msg) do
-            if string.type == "gird" then 
+        for _, item in pairs(msg) do
+            if item.type == "gird" then 
                 local maxX  = disp:getWidth()
                 local maxY  = disp:getHeight()
                 disp:drawLine(  0,0,      maxX,0)
@@ -20,23 +20,25 @@ return function (data)
                 disp:drawLine( maxX/2 + maxX/4,0,maxX/2 + maxX/4,maxY/2)
                 disp:drawLine( maxX/2, maxY/4,maxX,maxY/4)
                 disp:drawLine( 0, maxY/2 + maxY/4,maxX,maxY/4 + maxY/2)
-            elseif string.type == "text" then 
-                if string.font and string.x and string.y and string.text then
-                    disp:setFont(u8g[string.font])
-                    disp:drawStr(string.x,string.y,string.text)
+            elseif item.type == "text" then 
+                if item.font and item.x and item.y and item.text then
+                    item.text = item.text:gsub(string.char(194),"")
+                    disp:setFont(u8g[item.font])
+                    disp:drawStr(item.x,item.y,item.text)
+                    if debug then print(str2hex(item.text), item.text) end
                 else
-                    print("Error, input data is incomplete",string.x,string.y,string.text,string.font)
+                    print("Error, input data is incomplete",item.x,item.y,item.text,item.font)
                 end
-            elseif string.type == "image" then
-                if string.x and string.y and string.w and string.h and arr2str(string.image.data) then
-                    disp:drawXBM(string.x, string.y, string.w, string.h, arr2str(string.image.data))
+            elseif item.type == "image" then
+                if item.x and item.y and item.w and item.h and arr2str(item.image.data) then
+                    disp:drawXBM(item.x, item.y, item.w, item.h, arr2str(item.image.data))
                 else
-                    print("Error, input data is incomplete",string.x, string.y, string.w, string.h, sjson.encode(string.image.data))
+                    print("Error, input data is incomplete",item.x, item.y, item.w, item.h, sjson.encode(item.image.data))
                 end
-            elseif string.type == "upload" then
-                disp:drawStr(0,11,string.name)
-                file.open(string.name,"w")
-                file.write(string.content)
+            elseif item.type == "upload" then
+                disp:drawStr(0,11,item.name)
+                file.open(item.name,"w")
+                file.write(item.content)
                 file.close()
             end
         end 

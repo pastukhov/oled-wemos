@@ -36,6 +36,12 @@ function dolc(fileName, ...)
     collectgarbage()
 end
 
+function str2hex(str)
+    return (str:gsub('.', function (c)
+        return string.format('%03u', string.byte(c)) .. " "
+    end))
+end
+
 debug = false
 dolc('readConfig')
 dolc('initDisplay')
