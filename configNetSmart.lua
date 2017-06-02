@@ -1,7 +1,7 @@
 wifi.setmode(wifi.STATION)
 if config then
     wifi.sta.clearconfig()
-    wifi.sta.config(config.ssid, config.pwd)
+    wifi.sta.config(config)
     wifi.sta.autoconnect(1)
     wifi.sta.connect()
     if debug then print(config.ssid, config.pwd) end

@@ -1,4 +1,4 @@
-    print("drawing gird")
+ return function (item)
     local maxX  = disp:getWidth()
     local maxY  = disp:getHeight()
     disp:drawLine(  0,0,      maxX,0)
@@ -14,3 +14,4 @@
     disp:drawLine( maxX/2 + maxX/4,0,maxX/2 + maxX/4,maxY/2)
     disp:drawLine( maxX/2, maxY/4,maxX,maxY/4)
     disp:drawLine( 0, maxY/2 + maxY/4,maxX,maxY/4 + maxY/2)
+end

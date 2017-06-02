@@ -1,55 +1,58 @@
+config.topic = {
+                subscribe   =   'oled/' .. node.chipid() ..'/set',
+                publish     =   'oled/' .. node.chipid(),
+                status      =   'oled/' .. node.chipid() .. '/status'
+              }
 
 function connect ()
-    mqtt:connect(config.broker, config.port, config.tls, function(conn)
-        mqtt:subscribe('oled/events/+',0)
-        tmr.stop(1) -- stop connecting
-        tmr.stop(3) -- stop splash
-        print ("Connected") 
-        mqtt:publish('oled/status/'..node.chipid(),sjson.encode({ online = true}),0,0)
-        
+    client:connect(config.broker, config.port, config.tls, function(conn)
+        client:subscribe(config.topic.subscribe,0)
+        print ('Connected') 
+        client:publish(config.topic.status,sjson.encode({ online = true}),0,1)
+        splash:stop()
+        reconnect:stop()
     end)
 end
 
 
-
-mqtt = mqtt.Client(node.chipid(), 120, config.mqttlogin, config.mqttpassword)
-
-mqtt:lwt('oled/status/'..node.chipid(), sjson.encode({online = false}), 0, 0)
-
-mqtt:on('offline', function(con) 
-                    tmr.alarm(1, 1000, tmr.ALARM_AUTO, function()
-                                                        print ("Offline") 
-                                                        connect()
-                                                       end)
-                    end)
-
-
-mqtt:on("message", function(conn, topic, data)
---    tmr.stop(1)
-    local start = tmr.now()
-            if topic:match('message$') then
---                dolc('message',data)
-                if debug then print("data",data) end
-                dofile("message.lua")(data)
---            elseif topic:match('image$') then
---                dolc('image',data)
-            end
-
---    print(node.heap(),'bytes',tmr.now() - start, 'miliseconds', topic)
-    
---    mqtt:publish('oled/status',cjson.encode({tstamp = tmr.time(), data = {memory = node.heap(),miliseconds = tmr.now() - start, topic = topic }}),0,0)
-    data = nil
-    topic =nil
-         
-    collectgarbage()
+reconnect = tmr:create()
+reconnect:register(1000, tmr.ALARM_AUTO, function()
+    print ('Offline') 
+    connect()
 end)
 
-tmr.alarm(2,1000,tmr.ALARM_AUTO, function() 
+getip = tmr.create()
+getip:register(1000,tmr.ALARM_AUTO, function() 
     print('Waiting for a network')
     if wifi.sta.status() == wifi.STA_GOTIP then 
         print('Got a network')
-        tmr.stop(2)
         connect()
+        getip:stop()
     end
 end)
 
+if client then 
+    client:close() 
+    client = nil
+end
+
+client = mqtt.Client(node.chipid(), 120, config.mqttlogin, config.mqttpassword)
+
+client:lwt(config.topic.status , sjson.encode({online = false}), 0, 1)
+
+client:on('offline', 
+  function() 
+    reconnect:start()
+  end)
+
+client:on('message', function(conn, topic, data)
+    local msg = sjson.decode(data)    
+    disp:firstPage()
+    repeat
+        for _, item in pairs(msg) do
+            dofile(item.type .. '.lua')(item)
+        end 
+    until disp:nextPage() == false
+end)
+
+getip:start()

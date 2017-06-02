@@ -1,3 +1,5 @@
+debug = false
+
 function arr2str(arr)
     local result = {}
     for k,v in pairs(arr) do
@@ -6,29 +8,19 @@ function arr2str(arr)
     return table.concat(result)
 end
 
-function dolc(fileName, ...)
+function dolc(fileName)
     if debug then
         print("Executing ", fileName)
-        if arg.n > 0 then
-            local _, _ = pcall(function () dofile(fileName .. '.lua')(unpack(arg)) end)
-        else
-            local _, _ = pcall(function () dofile(fileName .. '.lua') end)
-        end
+        dofile(fileName .. '.lua')
     else
-        if  file.open(fileName .. '.lua') then
-            file.close()
+        if  file.exists(fileName .. '.lua') then
             print('Compiling:', fileName .. '.lua')
             local status, err = pcall(function () node.compile(fileName .. '.lua') end)
             if not status then print('Status', ': ',status,' Error: ',err) end
             file.remove(fileName .. '.lua')
         end
-        if file.open(fileName ..'.lc') then
-            file.close()
-            if arg.n > 0 then
-                local _, _ = pcall(function () dofile(fileName .. '.lc')(unpack(arg)) end)
-            else
-                local _, _ = pcall(function () dofile(fileName .. '.lc') end)
-            end
+        if file.exists(fileName ..'.lc') then
+           local _, _ = pcall(function () dofile(fileName .. '.lc') end)
         else
             print('Cant find ' .. fileName .. ' to exec')
         end
@@ -42,12 +34,8 @@ function str2hex(str)
     end))
 end
 
-debug = false
-dolc('readConfig')
-dolc('initDisplay')
---dolc('initTime')
---dolc('setLocale')
-dolc('displaySplash')
-dolc('configNetSmart')
-dolc('station')
-
+dofile('readConfig.lua')
+dofile('initDisplay.lua')
+dofile('displaySplash.lua')
+dofile('configNetSmart.lua')
+dofile('station.lua')
