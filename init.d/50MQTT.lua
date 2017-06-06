@@ -50,7 +50,7 @@ client:on('message', function(conn, topic, data)
     disp:firstPage()
     repeat
         for _, item in pairs(msg) do
-            dofile(item.type .. '.lua')(item)
+            dofile('MQTT.d/'.. item.type .. '.lua')(item)
         end 
     until disp:nextPage() == false
 end)
