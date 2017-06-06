@@ -41,8 +41,23 @@ function str2hex(str)
     end))
 end
 
-dofile('readConfig.lua')
-dofile('initDisplay.lua')
-dofile('displaySplash.lua')
-dofile('configNetSmart.lua')
-dofile('station.lua')
+--dofile('readConfig.lua')
+--dofile('initDisplay.lua')
+--dofile('displaySplash.lua')
+--dofile('configNetSmart.lua')
+--dofile('station.lua')
+
+files = file.list()
+initd = {}
+for fileName,_ in pairs(files) do
+    if fileName:match('init.d/') then
+--        print(fileName)
+        table.insert(initd,fileName)
+    end
+end
+table.sort(initd)
+
+for _,unit in pairs(initd) do
+    print("Running",unit)
+    dofile(unit)
+end
