@@ -9,12 +9,12 @@ PORT=/dev/ttyUSB0
 ######################################################################
 # End of user config
 ######################################################################
-LUA_FILES := $(wildcard *lua) $(wildcard init.d/*lua)
+LUA_FILES := $(wildcard *lua) $(wildcard init.d/*lua) $(wildcard MQTT.d/*lua)
 
 # Upload all
 all: $(LUA_FILES)
 	@$(NODEMCU-UPLOADER) -p $(PORT) upload $(foreach f, $^, $(f))
-
+	@$(NODEMCU-UPLOADER) -p $(PORT) upload local/config.json config.json
 # Print usage
 usage:
 	@echo "make upload FILE:=<file>  to upload a specific file (i.e make upload FILE:=init.lua)"
