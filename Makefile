@@ -9,7 +9,7 @@ PORT=/dev/ttyUSB0
 ######################################################################
 # End of user config
 ######################################################################
-LUA_FILES := $(wildcard *lua)
+LUA_FILES := $(wildcard *lua) $(wildcard init.d/*lua)
 
 # Upload all
 all: $(LUA_FILES)
