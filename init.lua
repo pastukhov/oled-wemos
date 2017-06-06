@@ -1,11 +1,18 @@
 debug = false
 
 function arr2str(arr)
-    local result = {}
-    for k,v in pairs(arr) do
-        result[k] = string.char(v) 
-    end
-    return table.concat(result)
+--    local result = {}
+--    for k,v in pairs(arr) do
+--        result[k] = string.char(v) 
+--    end
+--    return table.concat(result)
+
+  local s = ""
+  for i = 1, table.getn(arr) do
+    s = s .. string.char(arr[i]) -- '..' create new string. Expensive!!
+  end
+  return s
+
 end
 
 function dolc(fileName)
